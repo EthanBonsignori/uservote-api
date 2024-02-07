@@ -16,7 +16,7 @@ async def find_all_posts():
     return documents
 
 async def find_one_post(id: int):
-    document = await post_collection.find_one({"id": id})
+    document = await post_collection.find_one({"_id": id})
     return document
 
 async def insert_post(post: Post):
@@ -26,9 +26,9 @@ async def insert_post(post: Post):
 
 async def update_post(id: int, post: Post):
     document = post
-    result = await post_collection.update_one({"id": id}, {"$set": document})
+    result = await post_collection.update_one({"_id": id}, {"$set": document})
     return result
 
 async def delete_post(id: int):
-    result = await post_collection.delete_one({"id": id})
+    result = await post_collection.delete_one({"_id": id})
     return result

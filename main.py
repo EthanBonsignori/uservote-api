@@ -1,8 +1,6 @@
-import uuid
 import datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-
 from models.post import Post
 
 from database import (
@@ -50,7 +48,6 @@ async def get_post_by_id(id: int):
 async def create_post(postTitle: str, postContent: str, user_id: int, username: str):
     today = datetime.datetime.today().replace(microsecond=0)
     response = await insert_post({
-        "id": 0,
         "created_at": today,
         "updated_at": today,
         "title": postTitle,

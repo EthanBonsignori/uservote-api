@@ -12,7 +12,6 @@ class Category(Enum):
     RELEASED = "released"
 
 class Post(BaseModel):
-    id: int
     created_at: datetime
     updated_at: datetime
     title: str
