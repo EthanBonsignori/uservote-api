@@ -19,9 +19,9 @@ class Config:
     }
 
     @classmethod
-    def app_settings_validate(cls):
+    def validate_app_settings(cls):
         for k, v in cls.app_settings.items():
-            if None is v:
+            if v is None:
                 logging.error(f'Config variable error. {k} cannot be None')
                 raise InternalError([{"message": "Server configure error"}])
             else:

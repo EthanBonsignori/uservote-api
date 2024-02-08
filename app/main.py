@@ -30,7 +30,7 @@ app.add_middleware(
 )
 
 # DB Events
-app.add_event_handler("startup", Config.app_settings_validate)
+app.add_event_handler("startup", Config.validate_app_settings)
 app.add_event_handler("startup", connect_and_init_db)
 app.add_event_handler("shutdown", close_db_connect)
 
