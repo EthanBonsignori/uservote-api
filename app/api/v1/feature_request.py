@@ -42,7 +42,7 @@ async def get_feature_request_by_id(
         f'Received get feature request {uuid_masker(id)} request'
     )
 
-    feature_request = await get_feature_request_by_id(
+    feature_request = await db_get_feature_request_by_id(
         db,
         id
     )
