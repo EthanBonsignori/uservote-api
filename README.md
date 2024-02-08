@@ -17,7 +17,7 @@ pip install -r requirements.txt
 ## Usage
 
 ```bash
-uvicorn main:app --reload
+bash start.sh
 ```
 
 ## License
