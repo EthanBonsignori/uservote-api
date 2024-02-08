@@ -5,7 +5,7 @@ from pymongo import ReturnDocument
 import logging
 from app.config.config import Config
 from app.database.database import AsyncIOMotorClient
-from app.models.feature_request import FeatureRequestDB
+from app.models.feature_request import FeatureRequest
 from app.common.utils import uuid_masker
 
 
@@ -18,12 +18,15 @@ async def create_feature_request(
     title: str,
     content: str,
     author_username: str
-) -> FeatureRequestDB:
-    new_feature_request = FeatureRequestDB(
+) -> FeatureRequest:
+    new_feature_request = FeatureRequest(
         id=uuid4(),
         title=title,
         content=content,
         author_username=author_username,
+        category="requested",
+        comments=[],
+        votes=0,
         created_at=datetime.utcnow(),
         updated_at=datetime.utcnow(),
         deleted=False,
@@ -40,10 +43,22 @@ async def create_feature_request(
     return new_feature_request
 
 
-async def get_feature_request(
+async def get_feature_requests(
+    conn: AsyncIOMotorClient,
+) -> list | None:
+    logging.info(f"Getting all feature requests...")
+    feature_requests = conn[__db_name][__db_collection].find(
+        {"deleted": {"$ne": True}})
+    feature_requests_list = await feature_requests.to_list(length=100)
+    if None is feature_requests:
+        logging.info(f"Feature requests are None")
+    return feature_requests_list
+
+
+async def get_feature_request_by_id(
     conn: AsyncIOMotorClient,
     resource_id: UUID
-) -> FeatureRequestDB | None:
+) -> FeatureRequest | None:
     logging.info(f"Getting feature request {uuid_masker(resource_id)}...")
     feature_request = await conn[__db_name][__db_collection].find_one(
         {"$and": [
@@ -60,22 +75,21 @@ async def update_feature_request(
     conn: AsyncIOMotorClient,
     resource_id: UUID,
     resource_data: dict
-) -> FeatureRequestDB | None:
+) -> FeatureRequest | None:
     logging.info(
         f'Updating feature request {uuid_masker(str(resource_id))}...'
     )
-    feature_request = \
-        await conn[__db_name][__db_collection].find_one_and_update(
-            {"$and": [
-                {'_id': resource_id},
-                {'deleted': False},
-            ]},
-            {'$set': {
-                **resource_data,
-                "updated_at": datetime.utcnow(),
-            }},
-            return_document=ReturnDocument.AFTER,
-        )
+    feature_request = await conn[__db_name][__db_collection].find_one_and_update(
+        {"$and": [
+            {'_id': resource_id},
+            {'deleted': False},
+        ]},
+        {'$set': {
+            **resource_data,
+            "updated_at": datetime.utcnow(),
+        }},
+        return_document=ReturnDocument.AFTER,
+    )
     if None is feature_request:
         logging.error(
             f"Feature request {uuid_masker(str(resource_id))} is None"
@@ -90,7 +104,7 @@ async def update_feature_request(
 async def delete_feature_request(
     conn: AsyncIOMotorClient,
     resource_id: UUID,
-) -> FeatureRequestDB | None:
+) -> FeatureRequest | None:
     logging.info(
         f"Deleting feature request {uuid_masker(str(resource_id))}..."
     )
