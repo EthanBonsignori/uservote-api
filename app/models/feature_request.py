@@ -33,6 +33,8 @@ class FeatureRequestCreateResponse(MongoModel):
 
 class FeatureRequestGetResponse(MongoModel):
     id: UUID
+    created_at: datetime
+    updated_at: datetime
     title: str
     content: str
     votes: int

@@ -52,12 +52,14 @@ async def get_feature_request_by_id(
 
     return FeatureRequestGetResponse(
         id=feature_request.get("_id"),
+        created_at=feature_request.get("created_at"),
+        updated_at=feature_request.get("updated_at"),
         title=feature_request.get("title"),
         content=feature_request.get("content"),
         votes=feature_request.get("votes"),
         category=feature_request.get("category"),
         author_username=feature_request.get("author_username"),
-        comments=feature_request.get("comments")
+        comments=feature_request.get("comments"),
     )
 
 
