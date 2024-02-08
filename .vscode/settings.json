@@ -1,0 +1,10 @@
+// Workspace settings
+{
+  // The following will hide the js and map files in the editor
+  "files.exclude": {
+    "**/__pycache__": true
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {}
+}
