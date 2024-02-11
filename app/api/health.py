@@ -4,14 +4,14 @@ from motor.core import AgnosticDatabase
 import platform
 import psutil
 
-from app.database.database import get_db
+from app.database.database import get_database_client
 
 router = APIRouter()
 
 
 @router.get('/', include_in_schema=False)
 @router.get('')
-async def health(db: AgnosticDatabase = Depends(get_db)):
+async def health(db: AgnosticDatabase = Depends(get_database_client)):
     try:
         # Check if the database is responsive
         await db.command('ping')

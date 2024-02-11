@@ -10,21 +10,28 @@ load_dotenv()
 db_client: AgnosticDatabase = None
 
 
-async def get_db() -> AgnosticDatabase:
-    db_name = Config.app_settings.get('db_name')
-    return db_client[db_name]
+async def get_database_client() -> AgnosticDatabase:
+    return db_client
 
 
 async def connect_and_init_db():
     global db_client
+    logging.info('Connecting to mongo...')
+    mongo_username = Config.app_settings.get('mongo_username')
+    mongo_password = Config.app_settings.get('mongo_password')
+    db_name = Config.app_settings.get('db_name')
+
+    uri = f"mongodb+srv://{mongo_username}:{
+        mongo_password}@{db_name}.tbmgy3w.mongodb.net/?retryWrites=true&w=majority"
     try:
         db_client = AsyncIOMotorClient(
-            Config.app_settings.get('mongodb_url'),
+            uri,
             maxPoolSize=Config.app_settings.get('max_db_conn_count'),
             minPoolSize=Config.app_settings.get('min_db_conn_count'),
             uuidRepresentation="standard",
         )
-        logging.info('Connected to mongo.')
+        db_client.admin.command('ping')
+        logging.info('Connected to MongoDB!')
     except Exception as e:
         logging.exception(f'Could not connect to mongo: {e}')
         raise

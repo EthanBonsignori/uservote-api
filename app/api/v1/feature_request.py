@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Response
 from uuid import UUID
 
 import logging
-from app.database.database import get_db, AgnosticDatabase
+from app.database.database import get_database_client, AgnosticDatabase
 from app.common.utils import uuid_masker
 from app.common.error import UnprocessableError
 from app.schema.feature_request import \
@@ -11,7 +11,6 @@ from app.schema.feature_request import \
     create_feature_request as db_create_feature_request, \
     update_feature_request as db_update_feature_request, \
     delete_feature_request as db_delete_feature_request
-
 from app.models.feature_request import FeatureRequestCreateRequest, FeatureRequestGetResponse, FeatureRequestCreateResponse
 
 router = APIRouter()
@@ -20,7 +19,7 @@ router = APIRouter()
 @router.get('/', include_in_schema=False, status_code=200)
 @router.get('', response_model=list, status_code=200, responses={400: {}})
 async def get_feature_requests(
-    db: AgnosticDatabase = Depends(get_db),
+    db: AgnosticDatabase = Depends(get_database_client),
 ):
     logging.info('Received get feature requests request')
 
@@ -36,7 +35,7 @@ async def get_feature_requests(
 @router.get('/{id}', response_model=FeatureRequestGetResponse, status_code=200, responses={400: {}})
 async def get_feature_request_by_id(
     id: UUID,
-    db: AgnosticDatabase = Depends(get_db),
+    db: AgnosticDatabase = Depends(get_database_client),
 ):
     logging.info(
         f'Received get feature request {uuid_masker(id)} request'
@@ -67,7 +66,7 @@ async def get_feature_request_by_id(
 @router.post('', response_model=FeatureRequestCreateResponse, status_code=201, responses={400: {}})
 async def create_feature_request(
     feature_request_data: FeatureRequestCreateRequest,
-    db: AgnosticDatabase = Depends(get_db)
+    db: AgnosticDatabase = Depends(get_database_client)
 ):
     logging.info('Received create feature request request')
 
@@ -87,7 +86,7 @@ async def create_feature_request(
 async def update_sample_resource(
     id: UUID,
     feature_request_data: FeatureRequestCreateRequest,
-    db: AgnosticDatabase = Depends(get_db),
+    db: AgnosticDatabase = Depends(get_database_client),
 ):
     logging.info(
         f'Received update feature request {uuid_masker(id)} request'
@@ -108,7 +107,7 @@ async def update_sample_resource(
 @router.delete('/{id}', status_code=200, responses={400: {}})
 async def delete_feature_request(
     id: UUID,
-    db: AgnosticDatabase = Depends(get_db),
+    db: AgnosticDatabase = Depends(get_database_client),
 ):
     logging.info(
         f'Received delete feature request {uuid_masker(id)} request'
