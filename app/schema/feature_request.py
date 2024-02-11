@@ -4,7 +4,7 @@ from pymongo import ReturnDocument
 
 import logging
 from app.config.config import Config
-from app.database.database import AsyncIOMotorClient
+from app.database.database import AgnosticDatabase
 from app.models.feature_request import FeatureRequest
 from app.common.utils import uuid_masker
 
@@ -14,7 +14,7 @@ __db_collection = 'feature_request'
 
 
 async def create_feature_request(
-    conn: AsyncIOMotorClient,
+    conn: AgnosticDatabase,
     title: str,
     content: str,
     author_username: str
@@ -44,7 +44,7 @@ async def create_feature_request(
 
 
 async def get_feature_requests(
-    conn: AsyncIOMotorClient,
+    conn: AgnosticDatabase,
 ) -> list | None:
     logging.info(f"Getting all feature requests...")
     feature_requests = conn[__db_name][__db_collection].find(
@@ -56,7 +56,7 @@ async def get_feature_requests(
 
 
 async def get_feature_request_by_id(
-    conn: AsyncIOMotorClient,
+    conn: AgnosticDatabase,
     resource_id: UUID
 ) -> FeatureRequest | None:
     logging.info(f"Getting feature request {uuid_masker(resource_id)}...")
@@ -72,7 +72,7 @@ async def get_feature_request_by_id(
 
 
 async def update_feature_request(
-    conn: AsyncIOMotorClient,
+    conn: AgnosticDatabase,
     resource_id: UUID,
     resource_data: dict
 ) -> FeatureRequest | None:
@@ -102,7 +102,7 @@ async def update_feature_request(
 
 
 async def delete_feature_request(
-    conn: AsyncIOMotorClient,
+    conn: AgnosticDatabase,
     resource_id: UUID,
 ) -> FeatureRequest | None:
     logging.info(

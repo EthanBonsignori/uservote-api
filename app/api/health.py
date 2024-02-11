@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
-from motor.motor_asyncio import AsyncIOMotorClient
+from fastapi.responses import JSONResponse
+from motor.core import AgnosticDatabase
 import platform
 import psutil
 
@@ -10,7 +11,7 @@ router = APIRouter()
 
 @router.get('/', include_in_schema=False)
 @router.get('')
-async def health(db: AsyncIOMotorClient = Depends(get_db)):
+async def health(db: AgnosticDatabase = Depends(get_db)):
     try:
         # Check if the database is responsive
         await db.command('ping')
@@ -27,7 +28,10 @@ async def health(db: AsyncIOMotorClient = Depends(get_db)):
         "disk": psutil.disk_usage('/')._asdict()
     }
 
-    return {
-        "database": db_status,
-        "system_info": system_info
-    }
+    return JSONResponse(
+        status_code=db_status == 'up' and 200 or 503,
+        content={
+            "database": db_status,
+            "system_info": system_info
+        }
+    )

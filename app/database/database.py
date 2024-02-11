@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from motor.core import AgnosticDatabase
 from motor.motor_asyncio import AsyncIOMotorClient
 import logging
 
@@ -6,10 +7,10 @@ from app.config.config import Config
 
 load_dotenv()
 
-db_client: AsyncIOMotorClient = None
+db_client: AgnosticDatabase = None
 
 
-async def get_db() -> AsyncIOMotorClient:
+async def get_db() -> AgnosticDatabase:
     db_name = Config.app_settings.get('db_name')
     return db_client[db_name]
 
