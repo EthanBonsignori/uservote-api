@@ -19,10 +19,10 @@ async def connect_and_init_db():
     logging.info('Connecting to mongo...')
     mongo_username = Config.app_settings.get('mongo_username')
     mongo_password = Config.app_settings.get('mongo_password')
-    db_name = Config.app_settings.get('db_name')
+    mongo_db_name = Config.app_settings.get('mongo_db_name')
 
     uri = f"mongodb+srv://{mongo_username}:{
-        mongo_password}@{db_name}.tbmgy3w.mongodb.net/?retryWrites=true&w=majority"
+        mongo_password}@{mongo_db_name}.tbmgy3w.mongodb.net/?retryWrites=true&w=majority"
     try:
         db_client = AsyncIOMotorClient(
             uri,

@@ -12,10 +12,9 @@ class Config:
     title = "UserVote API"
 
     app_settings = {
-        'db_name': os.getenv('MONGO_DB'),
-        'mongodb_url': os.getenv('MONGO_URL'),
-        'mongo_username': os.getenv('MONGO_HOSTED_USERNAME'),
-        'mongo_password': os.getenv('MONGO_HOSTED_PASSWORD'),
+        'mongo_db_name': os.getenv('DB_NAME'),
+        'mongo_username': os.getenv('ATLAS_USERNAME'),
+        'mongo_password': os.getenv('ATLAS_PASSWORD'),
         'max_db_conn_count': os.getenv('MAX_CONNECTIONS_COUNT'),
         'min_db_conn_count': os.getenv('MIN_CONNECTIONS_COUNT'),
     }

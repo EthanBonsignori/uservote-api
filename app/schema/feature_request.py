@@ -9,7 +9,7 @@ from app.models.feature_request import FeatureRequest
 from app.common.utils import uuid_masker
 
 
-__db_name = Config.app_settings.get('db_name')
+__db_name = Config.app_settings.get('mongo_db_name')
 __db_collection = 'feature_request'
 
 
