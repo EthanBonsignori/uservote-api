@@ -1,29 +1,19 @@
-FROM python:3.12.0
+FROM python:3.12
 
-# RUN apt-get update \
-#     && apt-get upgrade -y \
-#     && apt-get install -y --no-install-recommends curl git build-essential python3-setuptools \
-#     && apt-get autoremove -y
+WORKDIR /code
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV MONGO_URI=mongodb://localhost:27017 \
+    MONGO_URL=mongodb://localhost \
+    MONGO_DB=UserVote \
+    MONGO_USER=root \
+    MONGO_PASSWORD=root \
+    MAX_CONNECTIONS_COUNT=100 \
+    MIN_CONNECTIONS_COUNT=0
 
-RUN adduser --disabled-password --gecos '' appuser
+COPY ./requirements.txt /code/requirements.txt
 
-RUN pip install --upgrade pip
-RUN pip install poetry
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-COPY pyproject.toml poetry.lock ./
-RUN poetry export --without-hashes --without dev -f requirements.txt -o requirements.txt && \
-        chown appuser:appuser requirements.txt && \
-        pip install -r requirements.txt
+COPY . /code
 
-
-USER appuser
-# COPY --chown=appuser:appuser start.sh /app/
-# COPY --chown=appuser:appuser app /app
-
-EXPOSE 8000
-CMD ["uvicorn", "app.main:app", "--host=0.0.0.0", "--reload", "--port", "8000"]
-# RUN chmod +x /app/start.sh
-# ENTRYPOINT [ "/app/start.sh" ]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
