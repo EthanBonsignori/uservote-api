@@ -6,5 +6,6 @@
   },
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": false,
-  "explorer.fileNesting.patterns": {}
+  "explorer.fileNesting.patterns": {},
+  "cSpell.words": ["pymongo"]
 }
