@@ -3,5 +3,6 @@ __pycache__
 .DS_STORE
 poetry.lock
 *.log
+.ignore
 
 .env
