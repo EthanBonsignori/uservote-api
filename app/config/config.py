@@ -10,6 +10,7 @@ load_dotenv()
 class Config:
     version = "0.1.0"
     title = "UserVote API"
+    env = os.getenv('ENV')
 
     app_settings = {
         'mongo_db_name': os.getenv('DB_NAME'),

@@ -18,12 +18,24 @@ setup_logging()
 
 app = FastAPI()
 
-origins = [
+dev_origins = [
     "http://localhost:3000",
 ]
+
+prod_origins = [
+    "http://uservote.netlify.app",
+    "https://uservote.netlify.app",
+    "http://www.uservote.netlify.app",
+    "https://www.uservote.netlify.app",
+    "http://getuservote.com",
+    "https://getuservote.com",
+    "http://www.getuservote.com",
+    "https://www.getuservote.com",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=dev_origins if Config.env == "dev" else prod_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
