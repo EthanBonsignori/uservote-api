@@ -83,7 +83,7 @@ async def create_feature_request(
 
 @router.put('/{id}', include_in_schema=False, status_code=200)
 @router.put('/{id}', status_code=200, responses={400: {}})
-async def update_sample_resource(
+async def update_feature_request(
     id: UUID,
     feature_request_data: FeatureRequestCreateRequest,
     db: AgnosticDatabase = Depends(get_database_client),
